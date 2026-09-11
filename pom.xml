@@ -145,10 +145,15 @@
                             </manifest>
                             <manifestEntries>
                                 <Implementation-Build>${buildNumber}</Implementation-Build>
-                                <OpenIDE-Module-Layer>generated-layer.xml</OpenIDE-Module-Layer>
+                                <OpenIDE-Module-Layer>eu/hlavki/netbeans/svuid/layer.xml</OpenIDE-Module-Layer>
                             </manifestEntries>
                         </archive>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -226,6 +231,25 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>rename-layer</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <move file="${project.basedir}/target/classes/META-INF/generated-layer.xml"
+                                    tofile="${project.basedir}/target/classes/eu/hlavki/netbeans/svuid/layer.xml" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <version>14.5</version>
@@ -233,7 +257,7 @@
                 <configuration>
                     <licenseName>Apache License, Version 2.0</licenseName>
                     <licenseFile>${basedir}/LICENSE-2.0.txt</licenseFile>
-                    <distributionUrl>https://github.com/hlavki/netbeans-svuid-generator</distributionUrl>
+                    <distributionUrl>https://github.com/torbaker/netbeans-svuid-generator</distributionUrl>
                     <codeNameBase>${project.groupId}.svuid.generator</codeNameBase>
                     <moduleDependencies>
                         <dependency>
