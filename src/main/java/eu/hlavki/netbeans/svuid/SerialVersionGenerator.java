@@ -1,6 +1,10 @@
 package eu.hlavki.netbeans.svuid;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -36,6 +40,10 @@ public class SerialVersionGenerator implements CodeGenerator
     private final SvuidType type;
     private final JTextComponent component;
 
+//    @MimeRegistration(
+//        mimeType = "text/x-java",
+//        service = CodeGenerator.Factory.class
+//    )
     public static class Factory implements CodeGenerator.Factory
     {
         public Factory() {}
@@ -125,16 +133,46 @@ public class SerialVersionGenerator implements CodeGenerator
 
                             svuid = svuidService.generate( typeElement );
                         }
-//                        int idx = GeneratorUtils.findClassMemberIndex(copy, (ClassTree) path.getLeaf(), caretOffset);
 
                         Set<Modifier> modifiers = EnumSet.of( Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL );
                         TreeMaker make = copy.getTreeMaker();
-                        VariableTree var = make.Variable( make.Modifiers( modifiers ),
+                        ExpressionTree serialAnnotation = make.Identifier( "Serial" );
+                        ModifiersTree  fieldModifiers = make.Modifiers( modifiers,
+                                                                        Collections.singletonList(
+                                                                                make.Annotation(
+                                                                                        serialAnnotation,
+                                                                                        Collections.emptyList()
+                                                                                )
+                                                                        )
+                                                                       );
+                        VariableTree var = make.Variable( fieldModifiers,
                                                           SerialVersionGenerator.SVUID_FIELD,
                                                           make.Identifier( "long" ),
                                                           make.Literal( Long.valueOf( svuid ) ) ); //NO18N
 
                         copy.rewrite( clazz, GeneratorUtils.insertClassMembers( copy, clazz, Collections.singletonList( var ), caretOffset ) );
+
+                        CompilationUnitTree compilationUnit = copy.getCompilationUnit();
+                        ImportTree serialImport = make.Import( make.QualIdent( "java.io.Serial" ), false );
+                        List<? extends ImportTree> imports = compilationUnit.getImports();
+                        List<ImportTree>        newImports = new ArrayList<ImportTree>( imports );
+
+                        boolean alreadyImported = imports.stream().anyMatch( i -> i.getQualifiedIdentifier().toString().equals("java.io.Serial") );
+
+                        if (!alreadyImported) {
+                            newImports.add(serialImport);
+                        }
+
+                        copy.rewrite(
+                            compilationUnit,
+                            make.addCompUnitImport(
+                                compilationUnit,
+                                make.Import(
+                                    make.QualIdent("java.io.Serial"),
+                                    false
+                                )
+                            )
+                        );
                     }
                 } );
 

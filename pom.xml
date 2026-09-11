@@ -136,6 +136,7 @@
                             </manifest>
                             <manifestEntries>
                                 <Implementation-Build>${buildNumber}</Implementation-Build>
+                                <OpenIDE-Module-Layer>eu/hlavki/netbeans/svuid/layer.xml</OpenIDE-Module-Layer>
                             </manifestEntries>
                         </archive>
                     </configuration>
@@ -249,6 +250,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.7.0</version>
             </plugin>
         </plugins>
     </build>
