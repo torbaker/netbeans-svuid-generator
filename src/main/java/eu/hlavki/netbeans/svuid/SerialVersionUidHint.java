@@ -13,9 +13,11 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.prefs.Preferences;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
+import javax.swing.JComponent;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
@@ -26,6 +28,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.CustomizerProvider;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.Hint.Options;
@@ -37,7 +40,8 @@ import org.openide.util.NbBundle;
 
 @Hint(displayName = "#DN_SerialVersionUID", description = "#DESC_SerialVersionUID",
       id = "eu.hlavki.netbeans.svuid.SerialVersionUidHint", category = "general", enabled = true,
-      options = Options.QUERY, suppressWarnings = SvuidHelper.SUPPRESS_WARNING_SERIAL)
+      options = Options.QUERY, suppressWarnings = SvuidHelper.SUPPRESS_WARNING_SERIAL,
+      customizerProvider = SerialVersionUidHint.SerialVersionUidHintCustomizerProvider.class )
 public class SerialVersionUidHint
 {
     private static final String SVUID = "serialVersionUID";
@@ -101,7 +105,17 @@ public class SerialVersionUidHint
         return Collections.singletonList( ed );
     }
 
-    private static final class JavaFixImpl extends JavaFix
+    public static class SerialVersionUidHintCustomizerProvider
+            implements CustomizerProvider
+    {
+        @Override
+        public JComponent getCustomizer(Preferences prefs)
+        {
+            return new SerialVersionUidHintCustomizer(prefs);
+        }
+    }
+
+private static final class JavaFixImpl extends JavaFix
     {
 
         private final SvuidType svuidType;
@@ -130,7 +144,7 @@ public class SerialVersionUidHint
         protected void performRewrite( TransformationContext tc ) throws Exception
         {
             WorkingCopy copy = tc.getWorkingCopy();
-            
+
             if ( copy.toPhase( Phase.RESOLVED ).compareTo( Phase.RESOLVED ) < 0 ) {
                 return;
             }

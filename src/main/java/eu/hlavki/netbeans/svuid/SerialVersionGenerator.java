@@ -18,6 +18,7 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
@@ -40,10 +41,10 @@ public class SerialVersionGenerator implements CodeGenerator
     private final SvuidType type;
     private final JTextComponent component;
 
-//    @MimeRegistration(
-//        mimeType = "text/x-java",
-//        service = CodeGenerator.Factory.class
-//    )
+    @MimeRegistration(
+        mimeType = "text/x-java",
+        service = CodeGenerator.Factory.class
+    )
     public static class Factory implements CodeGenerator.Factory
     {
         public Factory() {}
