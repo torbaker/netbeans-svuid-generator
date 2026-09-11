@@ -4,7 +4,12 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
@@ -12,101 +17,117 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import static javax.lang.model.element.Modifier.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.java.source.CompilationInfo;
 
-public class SvuidHelper {
+public class SvuidHelper
+{
+    private static final Logger log = Logger.getLogger( SvuidHelper.class.getName() );
 
-    private static final Logger log = Logger.getLogger(SvuidHelper.class.getName());
     private static final String ERROR = "<error>"; //NOI18N
     private static final String SERIALIZABLE_CLASS = "java.io.Serializable";
     public static final String SUPPRESS_WARNING_SERIAL = "serial";
 
-    private SvuidHelper() {
-    }
+    private SvuidHelper() {}
 
-    public static void scanForStaticFields(CompilationInfo info, final TreePath clsPath,
-            final Set<VariableElement> staticFields) {
+    public static void scanForStaticFields( CompilationInfo info, final TreePath clsPath,
+                                            final Set<VariableElement> staticFields )
+    {
         final Trees trees = info.getTrees();
-        new TreePathScanner<Void, Boolean>() {
+
+        new TreePathScanner<Void, Boolean>()
+        {
             @Override
-            public Void visitVariable(VariableTree node, Boolean p) {
-                if (ERROR.contentEquals(node.getName())) {
+            public Void visitVariable( VariableTree node, Boolean p )
+            {
+                if ( ERROR.contentEquals( node.getName() ) ) {
                     return null;
                 }
-                Element el = trees.getElement(getCurrentPath());
-                if (el != null && el.getKind() == ElementKind.FIELD && el.getModifiers().contains(Modifier.STATIC)) {
-                    staticFields.add((VariableElement) el);
+                Element el = trees.getElement( getCurrentPath() );
+                if ( el != null && el.getKind() == ElementKind.FIELD && el.getModifiers().contains( Modifier.STATIC ) ) {
+                    staticFields.add( (VariableElement) el );
                 }
                 return null;
             }
-        }.scan(clsPath, Boolean.FALSE);
+        }.scan( clsPath, Boolean.FALSE );
     }
 
-    private static boolean containsSerialVersionField(TypeElement type) {
+    private static boolean containsSerialVersionField( TypeElement type )
+    {
         boolean result = false;
-        List<VariableElement> fields = ElementFilter.fieldsIn(type.getEnclosedElements());
+        List<VariableElement> fields = ElementFilter.fieldsIn( type.getEnclosedElements() );
         Iterator<VariableElement> it = fields.iterator();
-        while (it.hasNext() && !result) {
+
+        while ( it.hasNext() && ! result ) {
             VariableElement e = it.next();
             Set<Modifier> modifiers = e.getModifiers();
             // documentation says ANY-ACCESS-MODIFIER static final long serialVersionUID
-            if (modifiers.containsAll(EnumSet.of(STATIC, FINAL))) {
+            if ( modifiers.containsAll( EnumSet.of( Modifier.STATIC, Modifier.FINAL ) ) ) {
                 TypeMirror t = e.asType();
-                if (t.getKind() != null && t.getKind() == TypeKind.LONG) {
+
+                if ( t.getKind() != null && t.getKind() == TypeKind.LONG ) {
                     return true;
                 }
             }
         }
-        if (log.isLoggable(Level.FINE)) {
-            log.fine("Class " + type.asType().toString() + (result ? "" : " does not") + " contain serialVersionUID field");
+        if ( SvuidHelper.log.isLoggable( Level.FINE ) ) {
+            SvuidHelper.log.fine( "Class " + type.asType().toString() + (result ? "" : " does not") + " contain serialVersionUID field" );
         }
+
         return result;
     }
 
-    public static boolean needsSerialVersionUID(TypeElement type) {
-        return isSerializable(type) && !containsSerialVersionField(type) && type.getKind() != ElementKind.ENUM
-                && !hasSuppressWarning(type, SvuidHelper.SUPPRESS_WARNING_SERIAL);
+    public static boolean needsSerialVersionUID( TypeElement type )
+    {
+        return SvuidHelper.isSerializable( type ) &&
+               ! SvuidHelper.containsSerialVersionField( type ) &&
+               type.getKind() != ElementKind.ENUM &&
+               ! SvuidHelper.hasSuppressWarning( type, SvuidHelper.SUPPRESS_WARNING_SERIAL );
     }
 
-    private static boolean isSerializable(TypeElement type) {
-        boolean result = false;
-        Collection<TypeElement> parents = getAllParents(type);
-        Iterator<TypeElement> it = parents.iterator();
-        while (it.hasNext() && !result) {
+    private static boolean isSerializable( TypeElement type )
+    {
+        boolean                 result  = false;
+        Collection<TypeElement> parents = getAllParents( type );
+        Iterator<TypeElement>   it      = parents.iterator();
+
+        while ( it.hasNext() && ! result ) {
             TypeElement parent = it.next();
-            StringBuilder qualifiedName = new StringBuilder(parent.getQualifiedName());
-            result = (parent.getKind().equals(ElementKind.INTERFACE) && SERIALIZABLE_CLASS.equals(qualifiedName.toString()));
+            StringBuilder qualifiedName = new StringBuilder( parent.getQualifiedName() );
+
+            result = (parent.getKind().equals( ElementKind.INTERFACE ) && SERIALIZABLE_CLASS.equals( qualifiedName.toString() ));
         }
-        if (log.isLoggable(Level.FINE)) {
-            log.fine("Class " + type.asType().toString() + (result ? " is" : " is not") + " serializable");
+
+        if ( SvuidHelper.log.isLoggable( Level.FINE ) ) {
+            SvuidHelper.log.fine( "Class " + type.asType().toString() + (result ? " is" : " is not") + " serializable" );
         }
+
         return result;
     }
 
-    private static Collection<TypeElement> getAllParents(TypeElement of) {
+    private static Collection<TypeElement> getAllParents( TypeElement of )
+    {
         Set<TypeElement> result = new HashSet<>();
-        for (TypeMirror t : of.getInterfaces()) {
+        for ( TypeMirror t : of.getInterfaces() ) {
             TypeElement te = (TypeElement) ((DeclaredType) t).asElement();
-            if (te != null) {
-                result.add(te);
-                result.addAll(getAllParents(te));
+            if ( te != null ) {
+                result.add( te );
+                result.addAll( getAllParents( te ) );
             } else {
-                log.log(Level.FINER, "te=null, t={0}", t);
+                SvuidHelper.log.log( Level.FINER, "te=null, t={0}", t );
             }
         }
 
         TypeMirror sup = of.getSuperclass();
         TypeElement te = sup.getKind() == TypeKind.DECLARED ? (TypeElement) ((DeclaredType) sup).asElement() : null;
-        if (te != null) {
-            result.add(te);
-            result.addAll(getAllParents(te));
+        if ( te != null ) {
+            result.add( te );
+            result.addAll( getAllParents( te ) );
         } else {
-            log.log(Level.FINER, "te=null, t={0}", of);
+            SvuidHelper.log.log( Level.FINER, "te=null, t={0}", of );
         }
         return result;
     }
@@ -115,22 +136,28 @@ public class SvuidHelper {
      * check if contains SuppressWarnings with value serial
      *
      * @param typeElement
+     *
      * @return
      */
-    private static boolean hasSuppressWarning(TypeElement type, String warning) {
-        boolean result = false;
-        SuppressWarnings annotation = type.getAnnotation(SuppressWarnings.class);
-        if (annotation != null) {
+    private static boolean hasSuppressWarning( TypeElement type, String warning )
+    {
+        boolean          result     = false;
+        SuppressWarnings annotation = type.getAnnotation( SuppressWarnings.class );
+
+        if ( annotation != null ) {
             String[] values = annotation.value();
             int idx = 0;
-            while (idx < values.length && result == false) {
-                result = warning.equals(values[idx++]);
+
+            while ( idx < values.length && result == false ) {
+                result = warning.equals( values[ idx++ ] );
             }
         }
-        if (log.isLoggable(Level.FINE)) {
-            log.fine("Class " + type.asType().toString() + (result ? "" : " does not")
-                    + " contain SuppressWarnings(serial) annotation");
+
+        if ( SvuidHelper.log.isLoggable( Level.FINE ) ) {
+            SvuidHelper.log.fine( "Class " + type.asType().toString() + (result ? "" : " does not")
+                                + " contain SuppressWarnings(serial) annotation" );
         }
+        
         return result;
     }
 }

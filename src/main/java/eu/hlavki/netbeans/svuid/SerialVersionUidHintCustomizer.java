@@ -2,7 +2,8 @@ package eu.hlavki.netbeans.svuid;
 
 import java.util.prefs.Preferences;
 
-public class SerialVersionUidHintCustomizer extends javax.swing.JPanel {
+public class SerialVersionUidHintCustomizer extends javax.swing.JPanel
+{
 
     private static final long serialVersionUID = -892296196830595275L;
     private final Preferences pref;
@@ -10,12 +11,13 @@ public class SerialVersionUidHintCustomizer extends javax.swing.JPanel {
     /**
      * Creates new form SerialVersionUidHintCustomizer
      */
-    public SerialVersionUidHintCustomizer(Preferences pref) {
+    public SerialVersionUidHintCustomizer( Preferences pref )
+    {
         this.pref = pref;
         initComponents();
-        warnForIncorrectValue.setSelected(pref.getBoolean(SerialVersionUidHint.WARN_FOR_INCORRECT_VALUE_KEY,
-                SerialVersionUidHint.WARN_FOR_INCORRECT_VALUE_DEFAULT));
-        ignoredValuesTextField.setText(pref.get(SerialVersionUidHint.IGNORED_VALUES_KEY, TOOL_TIP_TEXT_KEY));
+        warnForIncorrectValue.setSelected( pref.getBoolean( SerialVersionUidHint.WARN_FOR_INCORRECT_VALUE_KEY,
+                                                            SerialVersionUidHint.WARN_FOR_INCORRECT_VALUE_DEFAULT ) );
+        ignoredValuesTextField.setText( pref.get( SerialVersionUidHint.IGNORED_VALUES_KEY, TOOL_TIP_TEXT_KEY ) );
     }
 
     /**
@@ -74,11 +76,11 @@ public class SerialVersionUidHintCustomizer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void warnForIncorrectValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warnForIncorrectValueActionPerformed
-        pref.putBoolean(SerialVersionUidHint.WARN_FOR_INCORRECT_VALUE_KEY, warnForIncorrectValue.isSelected());
+        pref.putBoolean( SerialVersionUidHint.WARN_FOR_INCORRECT_VALUE_KEY, warnForIncorrectValue.isSelected() );
     }//GEN-LAST:event_warnForIncorrectValueActionPerformed
 
     private void ignoredValuesTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ignoredValuesTextFieldKeyReleased
-        pref.put(SerialVersionUidHint.IGNORED_VALUES_KEY, ignoredValuesTextField.getText());
+        pref.put( SerialVersionUidHint.IGNORED_VALUES_KEY, ignoredValuesTextField.getText() );
     }//GEN-LAST:event_ignoredValuesTextFieldKeyReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ignoredValuesLabel;

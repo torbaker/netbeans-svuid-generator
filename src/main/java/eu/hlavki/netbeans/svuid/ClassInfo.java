@@ -4,29 +4,37 @@ import java.lang.reflect.Modifier;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
-public class ClassInfo extends ElementInfo {
+public class ClassInfo extends ElementInfo
+{
+    public ClassInfo( TypeElement el )
+    {
+        super( el.getQualifiedName(), null );
 
-    public ClassInfo(TypeElement el) {
-        super(el.getQualifiedName(), null);
-        this.access = getAccessFlag(el.getModifiers()) | getInitialAccessFlag(el);
+        this.access = getAccessFlag( el.getModifiers() ) | getInitialAccessFlag( el );
     }
 
-    private int getInitialAccessFlag(TypeElement el) {
+    private int getInitialAccessFlag( TypeElement el )
+    {
         int accessFlag = 0;
-        if (el.getKind().equals(ElementKind.INTERFACE)) {
+
+        if ( el.getKind().equals( ElementKind.INTERFACE ) ) {
             accessFlag = Modifier.INTERFACE | Modifier.ABSTRACT;
         }
+
         return accessFlag;
     }
 
     @Override
-    public int getSvuidAccess() {
-        int modifier = access & (Modifier.PUBLIC | Modifier.FINAL | Modifier.INTERFACE | Modifier.ABSTRACT);
+    public int getSvuidAccess()
+    {
+        int modifier = this.access & (Modifier.PUBLIC | Modifier.FINAL | Modifier.INTERFACE | Modifier.ABSTRACT);
+
         return modifier;
     }
 
     @Override
-    public String getSortingName() {
-        return name + descriptor;
+    public String getSortingName()
+    {
+        return this.name + this.descriptor;
     }
 }

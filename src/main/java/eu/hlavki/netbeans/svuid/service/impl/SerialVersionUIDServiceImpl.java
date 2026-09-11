@@ -27,38 +27,40 @@ import org.openide.util.Exceptions;
 
 /**
  * See: http://java.sun.com/javase/6/docs/platform/serialization/spec/class.html See: ObjectStreamClass
- *
+ * <p>
  */
-public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
+public class SerialVersionUIDServiceImpl implements SerialVersionUIDService
+{
 
-    private static final Logger log = Logger.getLogger(SerialVersionUIDServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger( SerialVersionUIDServiceImpl.class.getName() );
 
     @Override
-    public long generate(TypeElement el) {
+    public long generate( TypeElement el )
+    {
         long result = 0L;
         ByteArrayOutputStream bout;
         DataOutputStream out = null;
         try {
             bout = new ByteArrayOutputStream();
-            out = new DataOutputStream(bout);
+            out = new DataOutputStream( bout );
 
             // 1. write class name
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "CLASS: {0}", el.asType().toString());
+            if ( log.isLoggable( Level.FINE ) ) {
+                log.log( Level.FINE, "CLASS: {0}", el.asType().toString() );
             }
-            ClassInfo clazzInfo = new ClassInfo(el);
-            out.writeUTF(clazzInfo.getName());
+            ClassInfo clazzInfo = new ClassInfo( el );
+            out.writeUTF( clazzInfo.getName() );
 
             // 2. write class access flag
-            out.writeInt(clazzInfo.getSvuidAccess());
+            out.writeInt( clazzInfo.getSvuidAccess() );
 
             // 3. write ordered interfaces
-            List<String> interfaces = getInterfaces(el.getInterfaces());
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "INTERFACES: {0}", interfaces);
+            List<String> interfaces = getInterfaces( el.getInterfaces() );
+            if ( log.isLoggable( Level.FINE ) ) {
+                log.log( Level.FINE, "INTERFACES: {0}", interfaces );
             }
-            for (String interfejz : interfaces) {
-                out.writeUTF(interfejz);
+            for ( String interfejz : interfaces ) {
+                out.writeUTF( interfejz );
             }
 
             /*
@@ -73,14 +75,14 @@ public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
              * constructor signatures are dot separated. Go figure...
              */
             List<? extends Element> elements = el.getEnclosedElements();
-            List<FieldInfo> fields = getFields(elements);
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "FIELDS: {0}", fields);
+            List<FieldInfo> fields = getFields( elements );
+            if ( log.isLoggable( Level.FINE ) ) {
+                log.log( Level.FINE, "FIELDS: {0}", fields );
             }
-            for (FieldInfo field : fields) {
-                out.writeUTF(field.getName());
-                out.writeInt(field.getSvuidAccess());
-                out.writeUTF(field.getDescriptor());
+            for ( FieldInfo field : fields ) {
+                out.writeUTF( field.getName() );
+                out.writeInt( field.getSvuidAccess() );
+                out.writeUTF( field.getDescriptor() );
             }
 
             /*
@@ -90,14 +92,14 @@ public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
              * 32-bit integer. 3. The descriptor of the method, ()V, in UTF
              * encoding.
              */
-            boolean staticInit = hasStaticInit(elements);
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Class has {0}static init!", (staticInit ? "" : "not "));
+            boolean staticInit = hasStaticInit( elements );
+            if ( log.isLoggable( Level.FINE ) ) {
+                log.log( Level.FINE, "Class has {0}static init!", (staticInit ? "" : "not ") );
             }
-            if (staticInit) {
-                out.writeUTF("<clinit>");
-                out.writeInt(Modifier.STATIC);
-                out.writeUTF("()V");
+            if ( staticInit ) {
+                out.writeUTF( "<clinit>" );
+                out.writeInt( Modifier.STATIC );
+                out.writeUTF( "()V" );
             }
 
             /*
@@ -106,14 +108,14 @@ public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
              * The modifiers of the method written as a 32-bit integer. 3. The
              * descriptor of the method in UTF encoding.
              */
-            List<MethodInfo> constructors = getConstructors(elements);
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "CONSTRUCTORS: {0}", constructors);
+            List<MethodInfo> constructors = getConstructors( elements );
+            if ( log.isLoggable( Level.FINE ) ) {
+                log.log( Level.FINE, "CONSTRUCTORS: {0}", constructors );
             }
-            for (MethodInfo constructor : constructors) {
-                out.writeUTF(constructor.getName());
-                out.writeInt(constructor.getSvuidAccess());
-                out.writeUTF(constructor.getDescriptor().replace('/', '.'));
+            for ( MethodInfo constructor : constructors ) {
+                out.writeUTF( constructor.getName() );
+                out.writeInt( constructor.getSvuidAccess() );
+                out.writeUTF( constructor.getDescriptor().replace( '/', '.' ) );
             }
 
             /*
@@ -122,14 +124,14 @@ public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
              * modifiers of the method written as a 32-bit integer. 3. The
              * descriptor of the method in UTF encoding.
              */
-            List<MethodInfo> methods = getMethods(elements);
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "METHODS: {0}", methods);
+            List<MethodInfo> methods = getMethods( elements );
+            if ( log.isLoggable( Level.FINE ) ) {
+                log.log( Level.FINE, "METHODS: {0}", methods );
             }
-            for (MethodInfo method : methods) {
-                out.writeUTF(method.getName());
-                out.writeInt(method.getSvuidAccess());
-                out.writeUTF(method.getDescriptor().replace('/', '.'));
+            for ( MethodInfo method : methods ) {
+                out.writeUTF( method.getName() );
+                out.writeInt( method.getSvuidAccess() );
+                out.writeUTF( method.getDescriptor().replace( '/', '.' ) );
             }
 
             out.flush();
@@ -139,7 +141,7 @@ public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
              * produced by DataOutputStream and produces five 32-bit values
              * sha[0..4].
              */
-            byte[] hashBytes = MessageDigest.getInstance("SHA").digest(bout.toByteArray());
+            byte[] hashBytes = MessageDigest.getInstance( "SHA" ).digest( bout.toByteArray() );
 
             /*
              * 9. The hash value is assembled from the first and second 32-bit
@@ -154,78 +156,84 @@ public class SerialVersionUIDServiceImpl implements SerialVersionUIDService {
              * 40 | ((sha[1] >>> 8) & 0xFF) << 48 | ((sha[1] >>> 0) & 0xFF) <<
              * 56;
              */
-            for (int i = Math.min(hashBytes.length, 8) - 1; i >= 0; i--) {
-                result = (result << 8) | (hashBytes[i] & 0xFF);
+            for ( int i = Math.min( hashBytes.length, 8 ) - 1; i >= 0; i-- ) {
+                result = (result << 8) | (hashBytes[ i ] & 0xFF);
             }
-        } catch (IOException | NoSuchAlgorithmException e) {
-            Exceptions.printStackTrace(e);
+        } catch ( IOException | NoSuchAlgorithmException e ) {
+            Exceptions.printStackTrace( e );
         } finally {
-            if (out != null) {
+            if ( out != null ) {
                 try {
                     out.close();
-                } catch (IOException e) {
-                    Exceptions.printStackTrace(e);
+                } catch ( IOException e ) {
+                    Exceptions.printStackTrace( e );
                 }
             }
         }
         return result;
     }
 
-    private List<String> getInterfaces(List<? extends TypeMirror> interfaces) {
+    private List<String> getInterfaces( List<? extends TypeMirror> interfaces )
+    {
         List<String> result = new ArrayList<>();
-        for (TypeMirror type : interfaces) {
-            result.add(stripGenerics(type.toString()));
+        for ( TypeMirror type : interfaces ) {
+            result.add( stripGenerics( type.toString() ) );
         }
-        Collections.sort(result);
+        Collections.sort( result );
         return result;
     }
 
-    private List<FieldInfo> getFields(List<? extends Element> elements) {
+    private List<FieldInfo> getFields( List<? extends Element> elements )
+    {
         List<FieldInfo> result = new ArrayList<>();
-        for (VariableElement elem : fieldsIn(elements)) {
-            FieldInfo fieldInfo = new FieldInfo(elem.getSimpleName(), elem.getModifiers(), Descriptor.of(elem.asType()));
-            if (fieldInfo.includeInSerialVersionUID()) {
-                result.add(fieldInfo);
+        for ( VariableElement elem : fieldsIn( elements ) ) {
+            FieldInfo fieldInfo = new FieldInfo( elem.getSimpleName(), elem.getModifiers(), Descriptor.of( elem.asType() ) );
+            if ( fieldInfo.includeInSerialVersionUID() ) {
+                result.add( fieldInfo );
             }
         }
-        Collections.sort(result);
+        Collections.sort( result );
         return result;
     }
 
-    private boolean hasStaticInit(List<? extends Element> elements) {
-        for (Element e : elements) {
-            return STATIC_INIT.equals(e.getKind());
+    private boolean hasStaticInit( List<? extends Element> elements )
+    {
+        for ( Element e : elements ) {
+            return STATIC_INIT.equals( e.getKind() );
         }
         return false;
     }
 
-    private List<MethodInfo> getConstructors(List<? extends Element> elements) {
+    private List<MethodInfo> getConstructors( List<? extends Element> elements )
+    {
         List<MethodInfo> result = new ArrayList<>();
-        for (ExecutableElement elem : constructorsIn(elements)) {
-            MethodInfo info = new MethodInfo(elem.getSimpleName(), elem.getModifiers(), Descriptor.of(elem.asType()));
-            if (info.includeInSerialVersionUID()) {
-                result.add(info);
+        for ( ExecutableElement elem : constructorsIn( elements ) ) {
+            MethodInfo info = new MethodInfo( elem.getSimpleName(), elem.getModifiers(), Descriptor.of( elem.asType() ) );
+            if ( info.includeInSerialVersionUID() ) {
+                result.add( info );
             }
         }
-        Collections.sort(result);
+        Collections.sort( result );
         return result;
     }
 
-    private List<MethodInfo> getMethods(List<? extends Element> elements) {
+    private List<MethodInfo> getMethods( List<? extends Element> elements )
+    {
         List<MethodInfo> result = new ArrayList<>();
-        for (ExecutableElement elem : methodsIn(elements)) {
-            MethodInfo info = new MethodInfo(elem.getSimpleName(), elem.getModifiers(), Descriptor.of(elem.asType()));
-            if (info.includeInSerialVersionUID()) {
-                result.add(info);
+        for ( ExecutableElement elem : methodsIn( elements ) ) {
+            MethodInfo info = new MethodInfo( elem.getSimpleName(), elem.getModifiers(), Descriptor.of( elem.asType() ) );
+            if ( info.includeInSerialVersionUID() ) {
+                result.add( info );
             }
         }
-        Collections.sort(result);
+        Collections.sort( result );
         return result;
     }
 
-    private String stripGenerics(String interfejzName) {
-        int end = interfejzName.indexOf('<');
+    private String stripGenerics( String interfejzName )
+    {
+        int end = interfejzName.indexOf( '<' );
         end = end == -1 ? interfejzName.length() : end;
-        return interfejzName.substring(0, end);
+        return interfejzName.substring( 0, end );
     }
 }

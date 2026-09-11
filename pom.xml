@@ -15,7 +15,7 @@
 
     <groupId>eu.hlavki.netbeans</groupId>
     <artifactId>netbeans-svuid-generator</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.2</version>
     <packaging>nbm</packaging>
 
     <developers>
@@ -27,41 +27,38 @@
                 <role>Developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>torbaker</id>
+            <name>Tim Orbaker</name>
+            <email>tim@orbaker.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <scm>
-        <url>https://github.com/hlavki/netbeans-svuid-generator</url>
-        <connection>scm:git:https://github.com:hlavki/netbeans-svuid-generator.git</connection>
-        <developerConnection>scm:git:git@github.com:hlavki/netbeans-svuid-generator.git</developerConnection>
+        <url>https://github.com/torbaker/netbeans-svuid-generator</url>
+        <connection>scm:git:https://github.com:torbaker/netbeans-svuid-generator.git</connection>
+        <developerConnection>scm:git:git@github.com:torbaker/netbeans-svuid-generator.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
 
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/hlavki/netbeans-svuid-generator/issues/</url>
+        <url>https://github.com/torbaker/netbeans-svuid-generator/issues/</url>
     </issueManagement>
 
     <ciManagement>
         <system>github</system>
-        <url>https://github.com/hlavki/netbeans-svuid-generator/actions/</url>
+        <url>https://github.com/torbaker/netbeans-svuid-generator/actions/</url>
     </ciManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <netbeans.version>RELEASE220</netbeans.version>
+        <netbeans.version>RELEASE310</netbeans.version>
         <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
@@ -212,23 +209,11 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <keyname>miso+appdev@hlavki.eu</keyname>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.7.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <serverId>ossrh</serverId>
-                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        <keyFingerprint>EA853B94D5E865791943A50D75D3D68CB08B7E22</keyFingerprint>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.netbeans.utilities</groupId>

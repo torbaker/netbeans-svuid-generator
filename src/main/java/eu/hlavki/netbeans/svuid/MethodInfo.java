@@ -4,24 +4,28 @@ import java.lang.reflect.Modifier;
 import java.util.Set;
 import javax.lang.model.element.Name;
 
-public class MethodInfo extends ElementInfo {
-
-    public MethodInfo(Name name, Set<javax.lang.model.element.Modifier> modifiers, String descriptor) {
-        super(name, modifiers, descriptor);
+public class MethodInfo extends ElementInfo
+{
+    public MethodInfo( Name name, Set<javax.lang.model.element.Modifier> modifiers, String descriptor )
+    {
+        super( name, modifiers, descriptor );
     }
 
     @Override
-    public boolean includeInSerialVersionUID() {
-        return (access & Modifier.PRIVATE) == 0;
+    public boolean includeInSerialVersionUID()
+    {
+        return (this.access & Modifier.PRIVATE) == 0;
     }
 
     @Override
-    public int getSvuidAccess() {
-        return access;
+    public int getSvuidAccess()
+    {
+        return this.access;
     }
 
     @Override
-    public String getSortingName() {
-        return name + descriptor;
+    public String getSortingName()
+    {
+        return this.name + this.descriptor;
     }
 }
