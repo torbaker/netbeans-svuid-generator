@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid;
+package com.orbaker.netbeans.svuid;
 
 import java.util.prefs.Preferences;
 
@@ -26,15 +26,18 @@ public class SerialVersionUidHintCustomizer extends javax.swing.JPanel
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         warnForIncorrectValue = new javax.swing.JCheckBox();
         ignoredValuesLabel = new javax.swing.JLabel();
         ignoredValuesTextField = new javax.swing.JTextField();
 
         warnForIncorrectValue.setText(org.openide.util.NbBundle.getMessage(SerialVersionUidHintCustomizer.class, "SerialVersionUidHintCustomizer.warnForIncorrectValue.text")); // NOI18N
-        warnForIncorrectValue.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        warnForIncorrectValue.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 warnForIncorrectValueActionPerformed(evt);
             }
         });
@@ -42,8 +45,10 @@ public class SerialVersionUidHintCustomizer extends javax.swing.JPanel
         ignoredValuesLabel.setText(org.openide.util.NbBundle.getMessage(SerialVersionUidHintCustomizer.class, "SerialVersionUidHintCustomizer.ignoredValuesLabel.text")); // NOI18N
 
         ignoredValuesTextField.setText(org.openide.util.NbBundle.getMessage(SerialVersionUidHintCustomizer.class, "SerialVersionUidHintCustomizer.ignoredValuesTextField.text")); // NOI18N
-        ignoredValuesTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+        ignoredValuesTextField.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
                 ignoredValuesTextFieldKeyReleased(evt);
             }
         });

@@ -1,10 +1,10 @@
-package eu.hlavki.netbeans.svuid.service.impl;
+package com.orbaker.netbeans.svuid.service.impl;
 
-import eu.hlavki.netbeans.svuid.ClassInfo;
-import eu.hlavki.netbeans.svuid.Descriptor;
-import eu.hlavki.netbeans.svuid.FieldInfo;
-import eu.hlavki.netbeans.svuid.MethodInfo;
-import eu.hlavki.netbeans.svuid.service.SerialVersionUIDService;
+import com.orbaker.netbeans.svuid.ClassInfo;
+import com.orbaker.netbeans.svuid.Descriptor;
+import com.orbaker.netbeans.svuid.FieldInfo;
+import com.orbaker.netbeans.svuid.MethodInfo;
+import com.orbaker.netbeans.svuid.service.SerialVersionUIDService;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid.service;
+package com.orbaker.netbeans.svuid.service;
 
 import javax.lang.model.element.TypeElement;
 

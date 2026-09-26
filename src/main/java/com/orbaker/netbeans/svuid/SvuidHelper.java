@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid;
+package com.orbaker.netbeans.svuid;
 
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;

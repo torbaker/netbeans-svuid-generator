@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid;
+package com.orbaker.netbeans.svuid;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.NewClassTree;
@@ -7,7 +7,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import eu.hlavki.netbeans.svuid.service.SerialVersionUIDService;
+import com.orbaker.netbeans.svuid.service.SerialVersionUIDService;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -39,7 +39,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 @Hint(displayName = "#DN_SerialVersionUID", description = "#DESC_SerialVersionUID",
-      id = "eu.hlavki.netbeans.svuid.SerialVersionUidHint", category = "general", enabled = true,
+      id = "com.orbaker.netbeans.svuid.SerialVersionUidHint", category = "general", enabled = true,
       options = Options.QUERY, suppressWarnings = SvuidHelper.SUPPRESS_WARNING_SERIAL,
       customizerProvider = SerialVersionUidHint.SerialVersionUidHintCustomizerProvider.class )
 public class SerialVersionUidHint

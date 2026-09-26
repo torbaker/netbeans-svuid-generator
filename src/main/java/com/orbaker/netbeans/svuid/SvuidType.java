@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid;
+package com.orbaker.netbeans.svuid;
 
 public enum SvuidType
 {

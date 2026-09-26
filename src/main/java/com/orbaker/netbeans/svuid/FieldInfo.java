@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid;
+package com.orbaker.netbeans.svuid;
 
 import java.lang.reflect.Modifier;
 import java.util.Set;

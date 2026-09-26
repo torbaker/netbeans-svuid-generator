@@ -1,4 +1,4 @@
-package eu.hlavki.netbeans.svuid;
+package com.orbaker.netbeans.svuid;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -8,7 +8,7 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import eu.hlavki.netbeans.svuid.service.SerialVersionUIDService;
+import com.orbaker.netbeans.svuid.service.SerialVersionUIDService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
