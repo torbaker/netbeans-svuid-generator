@@ -1,6 +1,6 @@
 This is a fork of [NetBeans SVUID Generator](https://github.com/hlavki/netbeans-svuid-generator).
 
-It makes the following changes:
+It makes the following changes from the original:
 
 - Uses annotation based generation of the layer.xml for registration and the packaged NBM
   properly registers now.
@@ -18,9 +18,12 @@ Things I plan to add:
 - A new action to 'Make this serializable' on a class declaration which will both implement Serialization
   and add an ID.
   
-- When Serialization 2.0 is introduced, we'll see what needs to be done then.
+- When JEPs begin to emerge for Serialization 2.0 is introduced, we'll see what needs to be done then.
+
+---
 
 Original README:
+
 # NetBeans Plugin: serialVersionUID Generator
 
 ## Overview:
